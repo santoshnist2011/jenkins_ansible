@@ -1,0 +1,39 @@
+---
+ - hosts: all
+   become: yes
+   tasks:
+
+# It will download the jenkins repo 
+   - name: Download Jenkins Repo
+     get_url:
+       url: http://pkg.jenkins-ci.org/redhat/jenkins.repo
+       dest: /etc/yum.repos.d/jenkins.repo
+
+# Downloading the rpm key for the Jenkins
+   - name: Download Key
+     rpm_key:
+       key: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+       state: present
+
+# Installing Jinkins in the system
+   - name: Install Jenkins
+     yum:
+       name: jenkins
+       state: present
+
+# It will start the jenkins service
+   - name: Start jenkins service
+     service:
+       name: jenkins
+       state: started
+
+# The command will display the initial password for jenkins login
+   - name: Run command to retrive the default password
+     command: cat /var/lib/jenkins/secrets/initialAdminPassword
+     register: initialAdminPassword
+     ignore_errors: yes
+
+# We are storing the initial password in variable to display
+   - name: See the retrived password using debug
+     debug:
+       var: initialAdminPassword.stdout
