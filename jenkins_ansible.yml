@@ -31,7 +31,7 @@
    - name: Run command to retrive the default password
      command: cat /var/lib/jenkins/secrets/initialAdminPassword
      register: initialAdminPassword
-     ignore_errors: yes
+     #ignore_errors: yes
 
 # We are storing the initial password in variable to display
    - name: See the retrived password using debug
